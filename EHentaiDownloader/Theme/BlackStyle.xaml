@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="TabItem_Style">
+        <Style.Triggers>
+            <Trigger Property="TabItem.IsSelected" Value="True">
+                <Setter Property="TabItem.Template" >
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Canvas Name="canvas" Background="#FF3D3C3C">
+                                <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Canvas.Top="3" 
+                                               Text="{TemplateBinding HeaderedContentControl.Header}"
+                                               Canvas.Left="8">
+                                </TextBlock>
+                            </Canvas>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="TabItem.FontWeight" Value="Bold"/>
+                <Setter Property="TabItem.Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
