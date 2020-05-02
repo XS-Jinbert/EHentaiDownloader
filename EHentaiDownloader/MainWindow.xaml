@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EHentaiDownloader"
+        xmlns:c="clr-namespace:EHentaiDownloader.Controls"
         mc:Ignorable="d"
-        Title="HentaiDownloader" Width="664.4" Height="449.2" Background="Black">
-    <Grid x:Name="Main_Grid" Margin="0,0,3.6,0.4">
+        Title="HentaiDownloader" Width="800" Height="550" ResizeMode="NoResize">
+    
+    <Grid x:Name="Main_Grid">
         <Border BorderBrush="Black" Background="Black">
             <TabControl x:Name="Downloader_TabControl" Background="Black">
                 <TabItem x:Name="ASMHentaiDownloader" Header="AsmHentai" Style="{StaticResource TabItem_Style}" 
@@ -27,9 +29,9 @@
                             <TabControl Width="132" >
                                 <TabItem Style="{StaticResource TabItem_Style}" Header="下载队列" 
                                          Foreground="White" Background="#FF101011" Height="21" Width="64" FontWeight="Normal">
-                                    <ScrollViewer x:Name="scrolls1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <ScrollViewer x:Name="DownloadScrolls" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                         <ScrollViewer.Content>
-                                            <StackPanel x:Name="numberedItemsStackPanel1" Orientation="Vertical"
+                                            <StackPanel x:Name="DownloadPanel" Orientation="Vertical"
                                                         Background="#FF2C2A2A">
                                             </StackPanel>
                                         </ScrollViewer.Content>
@@ -37,9 +39,9 @@
                                 </TabItem>
                                 <TabItem Style="{StaticResource TabItem_Style}" Header="历史记录" 
                                          Foreground="White" Background="#FF101011" Height="21" Width="64" FontWeight="Normal">
-                                    <ScrollViewer x:Name="scrolls2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <ScrollViewer x:Name="HistoryScrolls" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                         <ScrollViewer.Content>
-                                            <StackPanel x:Name="numberedItemsStackPanel2" Orientation="Vertical"
+                                            <StackPanel x:Name="HistoryPanel" Orientation="Vertical"
                                                         Background="#FF2C2A2A">
                                             </StackPanel>
                                         </ScrollViewer.Content>
@@ -56,18 +58,14 @@
                                     <StackPanel DockPanel.Dock="Bottom" Height="18">
                                         <TextBlock  Text="这是一个下载路径选择器" Foreground="Black" Height="18" FontSize="14"/>
                                     </StackPanel>
-                                    <Button Content="开始下载" DockPanel.Dock="Right" Width="60" HorizontalAlignment="Right" Height="20"/>
+                                    <Button x:Name="DownloadButton" Content="开始下载" DockPanel.Dock="Right" Width="60" HorizontalAlignment="Right" Height="20"/>
                                     <TextBlock DockPanel.Dock="Left" FontWeight="Bold" FontFamily="Microsoft YaHei" 
                                            Text="请输入要下载的本子编号：" Width="144" HorizontalAlignment="Left" 
                                                  Background="#FF101011" Foreground="white" Height="20"/>
-                                    <TextBox DockPanel.Dock="Bottom" Height="20"/>
+                                    <TextBox x:Name="DownloadID" DockPanel.Dock="Bottom" Height="20"/>
                                 </DockPanel>
                             </Border>
-                            <Border DockPanel.Dock="Bottom"
-                                        BorderBrush="Black" Background="#FF2C2A2A" BorderThickness="2">
-                                
-
-                            </Border>
+                            <c:BookMessgae x:Name="AsmBook" DockPanel.Dock="Bottom"/>
                         </DockPanel>
 
                     </Grid>
