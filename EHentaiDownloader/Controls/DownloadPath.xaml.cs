@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using EHentaiDownloader.Download;
+using System.IO;
 
 namespace EHentaiDownloader.Controls
 {
@@ -22,9 +23,32 @@ namespace EHentaiDownloader.Controls
     /// </summary>
     public partial class DownloadPath : UserControl //引用了Forms避免命名空间不明确
     {
+        string root = "Data";
+        string downloadPath = "Data/downloadPath.txt";
         public DownloadPath()
         {
             InitializeComponent();
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+            if (!File.Exists(downloadPath))
+            {
+                File.Create(downloadPath);
+            }
+            else
+            {
+                // 以添加选择项的方式绑定数据 特点：
+                using (StreamReader sr = File.OpenText(downloadPath))
+                {
+                    string s = "";
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        FilePath.Items.Add(s);
+                    }
+                    FilePath.SelectedIndex = 0;
+                }
+            }
         }
 
         /// <summary>
@@ -59,7 +83,16 @@ namespace EHentaiDownloader.Controls
                 return;
             }
             string m_Dir = m_Dialog.SelectedPath.Trim();
-            this.FilePath.Text = m_Dir;
+            FilePath.Items.Add(m_Dir);
+            FilePath.SelectedIndex = FilePath.Items.Count - 1;
+
+            using (FileStream fs = new FileStream(downloadPath, FileMode.OpenOrCreate))
+            {
+                StreamWriter sw = new StreamWriter(fs);
+                fs.Position = fs.Length;//设置尾部添加
+                sw.WriteLine(m_Dir);
+                sw.Close();
+            }
         }
 
         /// <summary>
