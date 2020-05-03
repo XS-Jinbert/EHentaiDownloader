@@ -54,18 +54,9 @@
                         <DockPanel Grid.Column="1" Grid.Row="0">
                             <Border DockPanel.Dock="Top"
                                     BorderBrush="Black" Background="White" BorderThickness="2">
-                                <DockPanel Height="38" DockPanel.Dock="Top" VerticalAlignment="Top">
-                                    <StackPanel DockPanel.Dock="Bottom" Height="18">
-                                        <TextBlock  Text="这是一个下载路径选择器" Foreground="Black" Height="18" FontSize="14"/>
-                                    </StackPanel>
-                                    <Button x:Name="DownloadButton" Content="开始下载" DockPanel.Dock="Right" Width="60" HorizontalAlignment="Right" Height="20"/>
-                                    <TextBlock DockPanel.Dock="Left" FontWeight="Bold" FontFamily="Microsoft YaHei" 
-                                           Text="请输入要下载的本子编号：" Width="144" HorizontalAlignment="Left" 
-                                                 Background="#FF101011" Foreground="white" Height="20"/>
-                                    <TextBox x:Name="DownloadID" DockPanel.Dock="Bottom" Height="20"/>
-                                </DockPanel>
+                                <c:DownloadPath x:Name="DownloadControl"/>
                             </Border>
-                            <c:BookMessgae x:Name="AsmBook" DockPanel.Dock="Bottom"/>
+                            <c:BookMessgae x:Name="AsmBookMessage" DockPanel.Dock="Bottom"/>
                         </DockPanel>
 
                     </Grid>

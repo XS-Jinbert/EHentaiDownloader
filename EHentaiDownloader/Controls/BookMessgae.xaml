@@ -25,10 +25,10 @@
             <Grid x:Name="BookImage" Grid.Row="0" Grid.Column="0" Background="Blue"/>
             <Grid x:Name="BookText" Grid.Row="0" Grid.Column="2">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="BookName1" Height="50" Background="#FF1683E2"/>
-                    <TextBlock x:Name="BookName2" Height="30" Background="#FF106EE8"/>
+                    <TextBlock x:Name="BookName1" Text="标题1：" Height="50" Background="#FF1683E2"/>
+                    <TextBlock x:Name="BookName2" Text="标题2：" Height="30" Background="#FF106EE8"/>
                     <WrapPanel x:Name="Artists" Background="#FF49F449" Height="30"/>
-                    <TextBlock x:Name="Pages" Background="#FF49F449" Height="30"/>
+                    <TextBlock x:Name="Pages" Text="页数：" Background="#FF49F449" Height="30"/>
                     <WrapPanel x:Name="BookTags" Background="#FF28D428" Height="200"/>
                 </StackPanel>
             </Grid>
