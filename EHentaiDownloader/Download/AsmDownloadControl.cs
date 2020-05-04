@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,60 +15,46 @@ namespace EHentaiDownloader.Download
 {
     class AsmDownloadControl
     {
-        private static AutoResetEvent event_1 = new AutoResetEvent(false);
-
         const string AsmRoot = "Data/AsmData/";
         const string AsmHistoryIDPath = "Data/AsmData/historyID.txt";
 
         const string BookRootPath = "Data/AsmBook/";
         const string bookURL = "https://asmhentai.com/g/";
 
-        static Queue<string> parsingWaitQ = new Queue<string>();  // 等待分析队列
+        // BlockingCollection快捷实现生产者消费者问题  // 分析对列
+        static readonly BlockingCollection<string> parsingQueue = new BlockingCollection<string>(new ConcurrentQueue<string>());
         static Queue<string> downloadWaitQ = new Queue<string>();        // 等待下载队列
-
-        public Thread parsingThread = new Thread(ParsingThread);
 
         public AsmDownloadControl()
         {
-            parsingThread.Start();
-        }
-
-        public static void ParsingThread()
-        {
-            string bookID = "";
-            while (true)
+            // 添加BookID线程
+            Task.Run(() =>
             {
-                event_1.WaitOne();
-                lock (parsingWaitQ)
+                while (!parsingQueue.IsCompleted)
                 {
-                    bookID = parsingWaitQ.Dequeue();
+                    string bookID = "";
+                    bookID = parsingQueue.Take();
+                    string html = askBookURL(bookID);
+                    AsmBook book = Parsing(html, bookID);
+                    if (book == null) return;
+                    saveBook(book);
+                    downloadWaitQ.Enqueue(bookID);
                 }
-                string html = askBookURL(bookID);
-                AsmBook book = Parsing(html, bookID);
-                if (book == null) return;
-                saveBook(book);
-                downloadWaitQ.Enqueue(bookID);
             }
+            );
         }
 
         public bool addId(string bookID)
         {
-            lock (parsingWaitQ)
+            if (CheckDownloadID(bookID))
             {
-                if (CheckDownloadID(bookID))
-                {
-                    MessageBox.Show("已下载或正在下载该本子，请到下载队列或历史记录查看！");
-                    return false;
-                }
-                else
-                {
-                    parsingWaitQ.Enqueue(bookID);
-                    if (parsingWaitQ.Count > 0)
-                    {
-                        event_1.Set();
-                    }
-                    return true;
-                }
+                MessageBox.Show("已下载或正在下载该本子，请到下载队列或历史记录查看！");
+                return false;
+            }
+            else
+            {
+                parsingQueue.Add(bookID);
+                return true;
             }
         }
 
