@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using EHentaiDownloader.Download;
 using System.IO;
+using System.Threading;
 
 namespace EHentaiDownloader.Controls
 {
@@ -25,6 +26,10 @@ namespace EHentaiDownloader.Controls
     {
         string root = "Data";
         string downloadPath = "Data/downloadPath.txt";
+
+        AsmDownloadControl AsmControl = new AsmDownloadControl();
+
+        // 初始化
         public DownloadPath()
         {
             InitializeComponent();
@@ -32,23 +37,18 @@ namespace EHentaiDownloader.Controls
             {
                 Directory.CreateDirectory(root);
             }
-            if (!File.Exists(downloadPath))
-            {
-                File.Create(downloadPath);
-            }
-            else
+            using (FileStream fs = new FileStream(downloadPath, FileMode.OpenOrCreate))
             {
                 // 以添加选择项的方式绑定数据 特点：繁琐，无法动态的更变数据
-                using (StreamReader sr = File.OpenText(downloadPath))
+                StreamReader sr = new StreamReader(fs);
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
                 {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        FilePath.Items.Add(s);
-                    }
-                    FilePath.SelectedIndex = 0;
+                    FilePath.Items.Add(s);
                 }
+                sr.Close();
             }
+            FilePath.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -111,10 +111,13 @@ namespace EHentaiDownloader.Controls
             {
                 if (BookId.Text.Length < 7)
                 {
-                    AsmDownload book1 = new AsmDownload(BookId.Text, FilePath.Text);
+                    //AsmDownload book1 = new AsmDownload(BookId.Text, FilePath.Text);
                     //string a = book1.askBookURL();
-                    BookId.Text = book1.book.downloadPath;
-                    FilePath.Text = "bookDownloadPath: " + book1.book.downloadPath;
+                    //BookId.Text = book1.book.downloadPath;
+                    //FilePath.Text = "bookDownloadPath: " + book1.book.downloadPath;
+
+                    //if(AsmControl.addId(BookId.Text))AsmControl.parsingThread.Start();
+                    AsmControl.addId(BookId.Text);
                 }
                 else
                 {

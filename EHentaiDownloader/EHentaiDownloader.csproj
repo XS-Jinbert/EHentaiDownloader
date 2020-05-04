@@ -79,6 +79,9 @@
       <DependentUpon>DownloadPath.xaml</DependentUpon>
     </Compile>
     <Compile Include="Download\AsmDownload.cs" />
+    <Compile Include="Download\AsmDownloadControl.cs" />
+    <Compile Include="Download\EDownload.cs" />
+    <Compile Include="Download\EDownloadControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
