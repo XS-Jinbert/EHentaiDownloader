@@ -38,7 +38,7 @@ namespace EHentaiDownloader.Controls
             }
             else
             {
-                // 以添加选择项的方式绑定数据 特点：
+                // 以添加选择项的方式绑定数据 特点：繁琐，无法动态的更变数据
                 using (StreamReader sr = File.OpenText(downloadPath))
                 {
                     string s = "";
@@ -86,6 +86,7 @@ namespace EHentaiDownloader.Controls
             FilePath.Items.Add(m_Dir);
             FilePath.SelectedIndex = FilePath.Items.Count - 1;
 
+            // 添加使用的路径到下载路径数据（未用到序列化）
             using (FileStream fs = new FileStream(downloadPath, FileMode.OpenOrCreate))
             {
                 StreamWriter sw = new StreamWriter(fs);

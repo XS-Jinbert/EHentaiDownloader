@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,6 +17,7 @@ namespace EHentaiDownloader.Download
     class AsmDownload
     {
         string bookURL = "https://asmhentai.com/g/";
+        static string BookRootPath = "Data/AsmBook/";
         int downloadPage = 1;
         int pageCount;
 
@@ -29,9 +32,10 @@ namespace EHentaiDownloader.Download
         {
             book.bookID = bookid;
             // book.downloadPath = downloadPath;
-            book.downloadPath = downloadPath + "/" + bookid;
+            book.downloadPath = downloadPath + "\\" + bookid;
             Parsing(askBookURL());
             saveImage(askPageURL(book.downloadPage[0]), "cover");
+            saveBook(book);
         }
 
         /// <summary>
@@ -166,9 +170,42 @@ namespace EHentaiDownloader.Download
         /// <summary>
         /// 保存本子信息
         /// </summary>
-        public void saveBook()
+        public static void saveBook(AsmBook Book)
         {
+            string savePath = BookRootPath + Book.bookID + ".bin";
+            if (!Directory.Exists(BookRootPath))
+            {
+                Directory.CreateDirectory(BookRootPath);
+            }
+            if (!File.Exists(savePath))
+            {
+                using (FileStream fs = File.Create(savePath))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(fs, Book);
+                }
+            }
+            else
+            {
+                using (FileStream fs = new FileStream(savePath, FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(fs, Book);
+                }
+            }
+        }
 
+        /// <summary>
+        /// 打开本子信息
+        /// </summary>
+        /// <param name="AsmBookID"></param>
+        public void openBook(string AsmBookID)
+        {
+            using (FileStream fs = new FileStream(BookRootPath + AsmBookID + ".bin", FileMode.Open))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                book = bf.Deserialize(fs)as AsmBook;
+            }
         }
 
         /// <summary>
@@ -185,6 +222,7 @@ namespace EHentaiDownloader.Download
         }
     }
 
+    [Serializable]
     class AsmBook
     {
         public string bookID{ get; set; }
@@ -194,7 +232,7 @@ namespace EHentaiDownloader.Download
         public string page{ get; set; }
         public string[] artists { get; set; }
         public string[] tags{ get; set; }
+        public string downloadPath { get; set; }
         public string[] downloadPage{ get; set; }
-        public string downloadPath{ get; set; }
     }
 }
